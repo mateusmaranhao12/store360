@@ -1,30 +1,30 @@
 const express = require('express');
+const path = require('path'); // Adicionar o módulo path
 const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const stripe = require('stripe')('sk_test_51PNe7P05ZSaswoy7wwZ13BsYXaaYJI1qY7gndq0uwWcKRUWlOi5FF2x3jcsFW9SwG4ZVT80qL6hH0nPWh0Zj4XEv00jlbpDhjc'); // Substitua 'YOUR_SECRET_KEY' pela sua chave secreta do Stripe
+const stripe = require('stripe')('sk_test_51PNe7P05ZSaswoy7wwZ13BsYXaaYJI1qY7gndq0uwWcKRUWlOi5FF2x3jcsFW9SwG4ZVT80qL6hH0nPWh0Zj4XEv00jlbpDhjc'); // Substitua pela sua chave secreta do Stripe
 
 const port = process.env.PORT || 8080;
 
 // Serve arquivos estáticos da pasta "dist"
 app.use(express.static(path.join(__dirname, 'dist')));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
-});
-
 app.use(cors()); // Use o middleware CORS
 app.use(bodyParser.json());
 
+// Rota inicial
 app.get('/', (req, res) => {
   res.send('Server is running');
 });
 
+// Rota para criar pagamento com PayPal
 app.post('/api/paypal/create-payment', (req, res) => {
   // Lógica para criar pagamento com PayPal
   res.json({ status: 'success', message: 'Payment created' });
 });
 
+// Rota para criar sessão de checkout do Stripe
 app.post('/api/stripe/create-checkout-session', async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
@@ -49,6 +49,11 @@ app.post('/api/stripe/create-checkout-session', async (req, res) => {
     console.error('Error creating Stripe checkout session:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});
+
+// Todas as outras rotas devem enviar de volta o arquivo index.html
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
 app.listen(port, () => {
