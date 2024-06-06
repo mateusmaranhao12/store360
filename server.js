@@ -6,6 +6,13 @@ const stripe = require('stripe')('sk_test_51PNe7P05ZSaswoy7wwZ13BsYXaaYJI1qY7gnd
 
 const port = process.env.PORT || 8080;
 
+// Serve arquivos estáticos da pasta "dist"
+app.use(express.static(path.join(__dirname, 'dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
+
 app.use(cors()); // Use o middleware CORS
 app.use(bodyParser.json());
 
