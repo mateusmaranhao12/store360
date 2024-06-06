@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const stripe = require('stripe')('sk_test_51PNe7P05ZSaswoy7wwZ13BsYXaaYJI1qY7gndq0uwWcKRUWlOi5FF2x3jcsFW9SwG4ZVT80qL6hH0nPWh0Zj4XEv00jlbpDhjc'); // Substitua 'YOUR_SECRET_KEY' pela sua chave secreta do Stripe
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.use(cors()); // Use o middleware CORS
 app.use(bodyParser.json());
